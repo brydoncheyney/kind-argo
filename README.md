@@ -14,7 +14,7 @@ make cluster
 
 ## Certificate Manager
 
-Install [cert-manager] to manage X.509 certificate and provision a self signed certificate issuer
+Install [cert-manager] to manage [X.509] certificates and provision a self signed certificate issuer
 
 ```
 make certmanager
@@ -91,6 +91,7 @@ make argo_rollouts
 [kind]: https://kind.sigs.k8s.io/
 [argo]: https://argoproj.github.io/
 [cert-manager]: https://cert-manager.io/
+[x.509]: https://en.wikipedia.org/wiki/X.509
 [ingress]: https://kubernetes.io/docs/concepts/services-networking/ingress/
 [ingress-nginx]: https://github.com/kubernetes/ingress-nginx
 [nginx]: https://www.nginx.org/
@@ -98,4 +99,3 @@ make argo_rollouts
 [argo workflows]:https://argoproj.github.io/workflows
 [argo rollouts]: https://argoproj.github.io/rollouts
 [argo cli]: https://github.com/argoproj/argo-workflows/releases
-’”
