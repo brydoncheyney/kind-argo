@@ -1,4 +1,4 @@
-all: cluster certmanager ingress argo
+all: lint cluster certmanager ingress argo
 
 .PHONY: up
 up: all
