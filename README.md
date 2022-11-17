@@ -30,7 +30,7 @@ make ingress-nginx
 
 ## Argo
 
-To install the resources for all Argo tools
+Install the resources for all Argo tools
 
 ```
 make argo
@@ -42,7 +42,7 @@ See below for details on the Argo Tooling and how to install these individually.
 
 [Argo CD] is a declarative, GitOps continuous delivery tool for Kubernetes.
 
-To install the resources
+Install the resources and [argo cd cli]
 
 ```
 make argo_cd
@@ -64,7 +64,7 @@ make argo_workflows_info
 
 [Argo Workflows] is an open source container-native workflow engine for orchestrating parallel jobs on Kubernetes.
 
-To install the resources, as well as the [argo workflows cli]
+Install the resources amd [argo workflows cli]
 
 ```
 make argo_workflows
@@ -96,7 +96,8 @@ make argo_rollouts
 [ingress]: https://kubernetes.io/docs/concepts/services-networking/ingress/
 [ingress-nginx]: https://github.com/kubernetes/ingress-nginx
 [nginx]: https://www.nginx.org/
-[argo cd]:https://argoproj.github.io/cd/
+[argo cd]: https://argoproj.github.io/cd/
+[argo cd cli]: https://github.com/argoproj/argo-cd/releases
 [argo workflows]:https://argoproj.github.io/workflows
 [argo workflows cli]: https://github.com/argoproj/argo-workflows/releases
 [argo rollouts]: https://argoproj.github.io/rollouts

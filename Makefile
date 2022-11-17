@@ -17,7 +17,7 @@ lint:
 	@type yamllint &>/dev/null || brew install yamllint
 	yamllint -d relaxed manifests
 
-.PHONY: cluster
+.PHONY:cluster
 cluster:
 	$(call header, Creating KIND Cluster)
 	kubectl cluster-info --context kind-argo &>/dev/null || kind create cluster --config manifests/config.yaml
@@ -79,6 +79,7 @@ cd:
 	kubectl apply -n argo -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 	kubectl apply -f manifests/argocd-ingress.yaml
 	kubectl -n argo wait --for=condition=ready pod -l app.kubernetes.io/name=argocd-server --timeout $(K8S_TIMEOUT)
+	@type argocd &>/dev/null || brew install argocd
 
 .PHONY: argo_cd
 argo_cd: cd cd_info
