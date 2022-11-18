@@ -122,6 +122,8 @@ canary      5         5         5            5           57s
 
 #### Canary
 
+A canary rollout is a deployment strategy where the operator releases a new version of their application to a small percentage of the production traffic.
+
 Modify the `.spec.template` to trigger a rollout and watch the Rollout
 
 ```
@@ -133,6 +135,23 @@ rollout "canary" image updated
 
 ```
 kubectl argo rollouts promote canary
+````
+
+#### BlueGreen
+
+A Blue Green Deployment allows users to reduce the amount of time multiple versions running at the same time.
+
+Modify the `.spec.template` to trigger a rollout and watch the Rollout
+
+```
+; kubectl argo rollouts set image bluegreen bluegreen=argoproj/rollouts-demo:yellow
+rollout "bluegreen" image updated
+
+; kubectl argo rollouts get rollout bluegreen --watch
+```
+
+```
+kubectl argo rollouts promote bluegreen
 ````
 
 [kind]: https://kind.sigs.k8s.io/
