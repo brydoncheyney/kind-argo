@@ -82,11 +82,52 @@ Go to https://argo-workflows.local, bypassing the UI login.
 
 [Argo Rollouts]  is a Kubernetes controller and set of CRDs which provide advanced deployment capabilities such as blue-green, canary, canary analysis, experimentation, and progressive delivery features to Kubernetes.
 
-To install the resources, as well as the [argo rollouts kubectl plugin]
+Install the resources, as well as the [argo rollouts kubectl plugin]
 
 ```
 make argo_rollouts
 ```
+
+#### Demos
+
+A demo of [canary] and [bluegreen] strategies is included in the `manifests/rollouts` directory, taken from the [Argo Rollouts Getting Started] documentation.
+
+Install the resources
+
+```
+kubectl apply -f manifests/rollouts/canary.yaml
+kubectl apply -f manifests/rollouts/canary-service.yaml
+kubectl apply -f manifests/rollouts/bluegreen.yaml
+kubectl apply -f manifests/rollouts/bluegreen-service.yaml
+```
+
+
+```
+rollout.argoproj.io/canary created
+service/canary created
+rollout.argoproj.io/bluegreen created
+service/bluegreen created
+
+; kubectl get rollouts
+NAME        DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
+bluegreen   5         5         5            5           57s
+canary      5         5         5            5           57s
+```
+
+#### Canary
+
+Modify the `.spec.template` to trigger a rollout and watch the Rollout
+
+```
+; kubectl argo rollouts set image canary canary=argoproj/rollouts-demo:yellow
+rollout "canary" image updated
+
+; kubectl argo rollouts get rollout canary --watch
+```
+
+```
+kubectl argo rollouts promote canary
+````
 
 [kind]: https://kind.sigs.k8s.io/
 [argo]: https://argoproj.github.io/
@@ -102,3 +143,6 @@ make argo_rollouts
 [argo workflows cli]: https://github.com/argoproj/argo-workflows/releases
 [argo rollouts]: https://argoproj.github.io/rollouts
 [argo rollouts kubectl plugin]: https://github.com/argoproj/argo-rollouts/releases
+[canary]: https://argoproj.github.io/argo-rollouts/features/canary/
+[bluegreen]: https://argoproj.github.io/argo-rollouts/features/bluegreen/
+[argo rollouts gettings started]: https://github.com/argoproj/argo-rollouts/blob/master/docs/getting-started.md
