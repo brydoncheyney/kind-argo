@@ -20,6 +20,7 @@ lint:
 .PHONY:cluster
 cluster:
 	$(call header, Creating KIND Cluster)
+	@type kind &>/dev/null || brew install kind
 	kubectl cluster-info --context kind-argo &>/dev/null || kind create cluster --config manifests/config.yaml
 	kubectl wait --for=condition=ready node -l kubernetes.io/hostname=argo-control-plane --timeout $(K8S_TIMEOUT)
 
