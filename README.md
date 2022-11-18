@@ -12,9 +12,15 @@ Provision a kind cluster
 make cluster
 ```
 
+To select the cluster
+
+```
+; kubectl config use-context kind-argo
+```
+
 ## Certificate Manager
 
-Install [cert-manager] to manage [X.509] certificates and provision a self signed certificate issuer
+Install [cert-manager] to manage [X.509] certificates in the `cert-manager` namespace and provision a self signed certificate issuer
 
 ```
 make certmanager
@@ -22,7 +28,7 @@ make certmanager
 
 ## Ingress
 
-Install [ingress-nginx] as an [Ingress] controller, using [NGINX] as reverse proxy and load balancer
+Install [ingress-nginx] as an [Ingress] controller, using [NGINX] as reverse proxy and load balancer in the `ingress-nginx` namespace
 
 ```
 make ingress-nginx
@@ -42,7 +48,7 @@ See below for details on the Argo Tooling and how to install these individually.
 
 [Argo CD] is a declarative, GitOps continuous delivery tool for Kubernetes.
 
-Install the resources and [argo cd cli]
+Install the resources in the `argo` namespace and installs the [argo cd cli]
 
 ```
 make argo_cd
@@ -64,7 +70,7 @@ make argo_workflows_info
 
 [Argo Workflows] is an open source container-native workflow engine for orchestrating parallel jobs on Kubernetes.
 
-Install the resources amd [argo workflows cli]
+Install the resources in the `argo` namespace and installs the [argo workflows cli]
 
 ```
 make argo_workflows
@@ -82,7 +88,7 @@ Go to https://argo-workflows.local, bypassing the UI login.
 
 [Argo Rollouts]  is a Kubernetes controller and set of CRDs which provide advanced deployment capabilities such as blue-green, canary, canary analysis, experimentation, and progressive delivery features to Kubernetes.
 
-Install the resources, as well as the [argo rollouts kubectl plugin]
+Install the resources in the `argo-rollouts` namespace and installs the [argo rollouts kubectl plugin]
 
 ```
 make argo_rollouts
