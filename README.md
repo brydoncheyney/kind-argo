@@ -4,6 +4,14 @@
 
 Provisions a [Kind] cluster as a playground for [Argo] projects. Argo is a project that creates and supports open source tools for [Kubernetes] to run workflows, manage clusters, and _do GitOps right_.
 
+## TLDR
+
+Provision a kind cluster and install the argo operators and supporting infrastructure
+
+```
+make up
+```
+
 ## Cluster
 
 Provision a kind cluster
