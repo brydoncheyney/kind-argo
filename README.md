@@ -145,4 +145,4 @@ kubectl argo rollouts promote canary
 [argo rollouts kubectl plugin]: https://github.com/argoproj/argo-rollouts/releases
 [canary]: https://argoproj.github.io/argo-rollouts/features/canary/
 [bluegreen]: https://argoproj.github.io/argo-rollouts/features/bluegreen/
-[argo rollouts gettings started]: https://github.com/argoproj/argo-rollouts/blob/master/docs/getting-started.md
+[argo rollouts getting started]: https://github.com/argoproj/argo-rollouts/blob/master/docs/getting-started.md
