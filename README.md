@@ -162,6 +162,106 @@ rollout "bluegreen" image updated
 kubectl argo rollouts promote bluegreen
 ````
 
+## Horizontal Pod Autoscaler
+
+### Kubernetes Metrics Server
+
+The Kubernetes Metrics Server is an aggregator of resource usage data in your cluster -
+
+> Metrics Server collects resource metrics from Kubelets and exposes them in Kubernetes apiserver
+> through Metrics API for use by Horizontal Pod Autoscaler and Vertical Pod Autoscaler. Metrics API
+> can also be accessed by kubectl top, making it easier to debug autoscaling pipelines.
+>
+> Metrics Server is not meant for non-autoscaling purposes. For example, don't use it to forward
+> metrics to monitoring solutions, or as a source of monitoring solution metrics. In such cases
+> please collect metrics from Kubelet /metrics/resource endpoint directly.
+
+Install the [metrics server]
+
+```
+make metrics-server
+```
+
+The `metrics-server` is deployed to the `kube-system` namespace.
+
+```
+; kubectl -n kube-system get pods -l k8s-app=metrics-server
+NAME                              READY   STATUS    RESTARTS   AGE
+metrics-server-55dd79d7bf-2d9mv   1/1     Running   0          16m
+```
+
+### Horizontal Pod Autoscaler
+
+Next, install the the Resources to demonstrate the [HorizontalAutoscaler].
+
+```
+make hpa
+```
+
+This will create a Deployment, in the `hpa-demo` namespace with a single Pod, as well as a HorizontalPodAutoscaler configured to [scale the deployment] at 50% average utilisation.
+
+```
+; kubectl get pods
+NAME                          READY   STATUS    RESTARTS   AGE
+horizontal-5cc466c47f-7t64z   1/1     Running   0          67s
+
+; kubectl get hpa
+NAME         REFERENCE               TARGETS   MINPODS   MAXPODS   REPLICAS   AGE
+horizontal   Deployment/horizontal   0%/50%    1         6         1          25s
+```
+
+To increase the load, we can run a [busybox] container that repeatedly hits an endpoint of the Service. In a new terminal window, kick off the load generator.
+
+```
+make hpa-load-generator
+```
+
+Now run:
+
+```
+; kubectl get hpa horizontal --watch
+NAME         REFERENCE               TARGETS   MINPODS   MAXPODS   REPLICAS   AGE
+horizontal   Deployment/horizontal   24%/50%    1         6         2          8m8s
+horizontal   Deployment/horizontal   169%/50%   1         6         2          8m15s
+horizontal   Deployment/horizontal   108%/50%   1         6         4          8m30s
+horizontal   Deployment/horizontal   72%/50%    1         6         6          8m45s
+horizontal   Deployment/horizontal   52%/50%    1         6         6          9m
+horizontal   Deployment/horizontal   38%/50%    1         6         6          9m15s
+^C
+
+; k get deployment horizontal
+NAME         READY   UP-TO-DATE   AVAILABLE   AGE
+horizontal   6/6     6            6           10m
+```
+
+The increased CPU load exceeds the target threshold of 50% and new Pods are provisioned in response.
+
+To stop the load, press `Ctrl+C` in the terminal you created the `busybox` Pod.
+
+```
+; make hpa-load-generator
+If you don't see a command prompt, try pressing enter.
+OK!OK!OK!^Cpod "load-generator" deleted
+pod hpa-demo/load-generator terminated (Error)
+```
+
+Again, you can watch the HorizontalPodAutoscaler and see that the drop in CPU load triggers a scale down of Pods.
+
+```
+; kubectl get hpa horizontal --watch
+horizontal   Deployment/horizontal   0%/50%     1         6         6          24m
+horizontal   Deployment/horizontal   0%/50%     1         6         5          24m
+horizontal   Deployment/horizontal   0%/50%     1         6         5          25m
+horizontal   Deployment/horizontal   0%/50%     1         6         3          26m
+horizontal   Deployment/horizontal   0%/50%     1         6         3          26m
+horizontal   Deployment/horizontal   0%/50%     1         6         1          26m
+horizontal   Deployment/horizontal   68%/50%    1         6         1          27m
+
+; k get deployment
+NAME         READY   UP-TO-DATE   AVAILABLE   AGE
+horizontal   2/2     1            1           39m
+```
+
 [kind]: https://kind.sigs.k8s.io/
 [argo]: https://argoproj.github.io/
 [kubernetes]: https://kubernetes.io/
@@ -179,3 +279,7 @@ kubectl argo rollouts promote bluegreen
 [canary]: https://argoproj.github.io/argo-rollouts/features/canary/
 [bluegreen]: https://argoproj.github.io/argo-rollouts/features/bluegreen/
 [argo rollouts getting started]: https://github.com/argoproj/argo-rollouts/blob/master/docs/getting-started.md
+[metrics server]: https://github.com/kubernetes-sigs/metrics-server
+[horizontalautoscaler]: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale
+[busybox]: https://busybox.net/
+[scale the deployment]: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/#algorithm-details

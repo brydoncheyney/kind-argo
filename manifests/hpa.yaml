@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: horizontal
+spec:
+  selector:
+    matchLabels:
+      run: horizontal
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: horizontal
+    spec:
+      containers:
+      - name: horizontal
+        image: registry.k8s.io/hpa-example
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            cpu: 500m
+            memory: 16Mi
+          requests:
+            cpu: 200m
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: horizontal
+  labels:
+    run: horizontal
+spec:
+  ports:
+  - port: 80
+  selector:
+    run: horizontal
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: horizontal
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: horizontal
+  minReplicas: 1
+  maxReplicas: 6
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 50

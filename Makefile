@@ -130,3 +130,27 @@ argo_rollouts: rollouts
 
 .PHONY: argo
 argo: argo_cd argo_workflows argo_rollouts
+
+.PHONY: metrics-server
+metrics-server:
+	kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+	kubectl patch \
+	-n kube-system deployment metrics-server \
+	--type=json \
+	-p '[{"op":"add","path":"/spec/template/spec/containers/0/args/-","value":"--kubelet-insecure-tls"}]'
+
+.PHONY: hpa
+hpa: metrics-server
+	kubectl create namespace hpa-demo 2>/dev/null || true
+	kubectl apply -n hpa-demo -f manifests/hpa.yaml
+
+.PHONY: hpa-load-generator
+hpa-load-generator:
+	@bash -c 'trap "exit 0" EXIT ; \
+			kubectl run \
+			-i \
+			--tty load-generator \
+			--rm \
+			--image=busybox:1.34.1 \
+			--restart=Never \
+			-- /bin/sh -c "while sleep 0.01; do wget -q -O- http://horizontal; done"'
