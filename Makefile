@@ -1,4 +1,4 @@
-all: lint cluster certmanager ingress argo
+all: lint cluster certmanager ingress argo hpa
 
 .PHONY: up
 up: all
@@ -133,6 +133,7 @@ argo: argo_cd argo_workflows argo_rollouts
 
 .PHONY: metrics-server
 metrics-server:
+	$(call header, Metrics Server)
 	kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
 	kubectl patch \
 	-n kube-system deployment metrics-server \
@@ -141,11 +142,13 @@ metrics-server:
 
 .PHONY: hpa
 hpa: metrics-server
+	$(call header, Horizontal Pod Autoscaler)
 	kubectl create namespace hpa-demo 2>/dev/null || true
 	kubectl apply -n hpa-demo -f manifests/hpa.yaml
 
 .PHONY: hpa-load-generator
 hpa-load-generator:
+	$(call header, HPA Load Generator)
 	@bash -c 'trap "exit 0" EXIT ; \
 			kubectl run \
 			-i \

@@ -1,12 +1,12 @@
-# Kind Argo
+# Kind Playground
 
 ## Overview
 
-Provisions a [Kind] cluster as a playground for [Argo] projects. Argo is a project that creates and supports open source tools for [Kubernetes] to run workflows, manage clusters, and _do GitOps right_.
+Provisions a [Kind] cluster as a playground for [Kubernetes] concepts, controllers, operators and tooling.
 
 ## TLDR
 
-Provision a kind cluster and install the argo operators and supporting infrastructure
+Provision a kind cluster and install the _all the things_
 
 ```
 make up
@@ -43,6 +43,8 @@ make ingress-nginx
 ```
 
 ## Argo
+
+Argo is a project that creates and supports open source tools for Kubernetes to run workflows, manage clusters, and _do GitOps right_.
 
 Install the resources for all Argo tools
 
@@ -143,7 +145,7 @@ rollout "canary" image updated
 
 ```
 kubectl argo rollouts promote canary
-````
+```
 
 #### BlueGreen
 
@@ -160,7 +162,7 @@ rollout "bluegreen" image updated
 
 ```
 kubectl argo rollouts promote bluegreen
-````
+```
 
 ## Horizontal Pod Autoscaler
 
@@ -263,8 +265,8 @@ horizontal   2/2     1            1           39m
 ```
 
 [kind]: https://kind.sigs.k8s.io/
-[argo]: https://argoproj.github.io/
 [kubernetes]: https://kubernetes.io/
+[argo]: https://argoproj.github.io/
 [cert-manager]: https://cert-manager.io/
 [x.509]: https://en.wikipedia.org/wiki/X.509
 [ingress]: https://kubernetes.io/docs/concepts/services-networking/ingress/
