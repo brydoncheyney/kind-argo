@@ -264,6 +264,61 @@ NAME         READY   UP-TO-DATE   AVAILABLE   AGE
 horizontal   2/2     1            1           39m
 ```
 
+## OPA Gatekeeper
+
+The [Open Policy Agent] (OPA) is _an open source, general-purpose policy engine that unifies policy enforcement across the stack_. The [admission controller webhooks] are executed whenever a resource is created, updated or deleted. Policy decisions are executed by OPA by evaluating against policies and data. For example,
+
+- allow only images from an official source to be pulled
+- ensure all Deployment resources describe expected labels
+- enforce consistent naming conventions for resources
+
+[Gatekeeper] uses native Kubernetes [Custom Resource Definition] (CRD)-based policies executed by OPA. Constraints are defined by reusable [Constraint Templates], which define the schema of Constraints, as well as the policy definitions.
+
+Install the Gatekeeper admissions controller
+
+```
+make gatekeeper
+```
+
+Apply the example Resources
+
+```
+make gatekeeper-apply-templates gatekeeper-apply-constraints
+```
+
+> Constraint Templates taken from the [Gatekeeper Library]
+
+This provides
+
+- a Constraint Template that defines a policy to ensure required **labels**
+- a Constraint Template that defines a policy to ensure required **annotations**
+- a Constraint to enforce all Namespaces to use an `owner` label
+- a Constraint to enforce all Namespaces to use an `registry` annotation
+
+> Note that the Constraint Templates are taken from the [Gatekeeper Library] - many more examples can be found here!
+
+To see the Constraints in action,
+
+```
+make gatekeeper-apply-examples
+```
+
+This providesd
+
+- a Namespace definition _with_ the required label and annotations
+- a Namespace definition _without_ the required label
+- a Namespace definition _without_ the required annotation
+
+
+The first definition will create the resource, as expected, while the remaining definitions will be rejected.
+
+```
+kubectl -n gatekeeper-system apply -f manifests/opa/examples
+namespace/namespace-satisfies-constraints created
+Error from server (Forbidden): error when creating "manifests/opa/examples/namespace-fails-annotation-constraint.yaml": admission webhook "validation.gatekeeper.sh" denied the request: [ns-must-have-registry] you must provide annotation(s): {"registry"}
+Error from server (Forbidden): error when creating "manifests/opa/examples/namespace-fails-label-constraint.yaml": admission webhook "validation.gatekeeper.sh" denied the request: [ns-must-have-owner] you must provide labels: {"owner"}
+```
+
 [kind]: https://kind.sigs.k8s.io/
 [kubernetes]: https://kubernetes.io/
 [argo]: https://argoproj.github.io/

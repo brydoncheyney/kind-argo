@@ -157,3 +157,16 @@ hpa-load-generator:
 			--image=busybox:1.34.1 \
 			--restart=Never \
 			-- /bin/sh -c "while sleep 0.01; do wget -q -O- http://horizontal; done"'
+
+.PHONY: gatekeeper
+gatekeeper:
+	$(call header, OPA Gatekeeper Controller Manager)
+	kubectl apply -f https://raw.githubusercontent.com/open-policy-agent/gatekeeper/master/deploy/gatekeeper.yaml
+	kubectl -n gatekeeper-system wait --for condition=ready pod -l control-plane=controller-manager --timeout ${K8S_TIMEOUT}
+
+.PHONY: admission-controller
+admission-controller: gatekeeper
+
+gatekeeper-apply-%:
+	$(call header, OPA Gatekeeper)
+	kubectl -n gatekeeper-system apply -f manifests/opa/$*
