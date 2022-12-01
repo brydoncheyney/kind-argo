@@ -21,8 +21,8 @@ lint:
 cluster:
 	$(call header, Creating KIND Cluster)
 	@type kind &>/dev/null || brew install kind
-	kubectl cluster-info --context kind-argo &>/dev/null || kind create cluster --config manifests/config.yaml
-	kubectl wait --for=condition=ready node -l kubernetes.io/hostname=argo-control-plane --timeout $(K8S_TIMEOUT)
+	kubectl cluster-info --context kind-playground &>/dev/null || kind create cluster --config manifests/config.yaml
+	kubectl wait --for=condition=ready node -l kubernetes.io/hostname=playground-control-plane --timeout $(K8S_TIMEOUT)
 
 .PHONY: kind
 kind: cluster
@@ -30,7 +30,7 @@ kind: cluster
 .PHONY: destroy
 destroy:
 	$(call header, Destroying KIND Cluster!)
-	kind delete cluster --name argo
+	kind delete cluster --name playground
 
 .PHONY: delete
 delete: destroy

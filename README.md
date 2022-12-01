@@ -23,7 +23,7 @@ make cluster
 To select the cluster
 
 ```
-; kubectl config use-context kind-argo
+; kubectl config use-context kind-playground
 ```
 
 ## Certificate Manager
@@ -285,3 +285,9 @@ horizontal   2/2     1            1           39m
 [horizontalautoscaler]: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale
 [busybox]: https://busybox.net/
 [scale the deployment]: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/#algorithm-details
+[open policy agent]: https://www.openpolicyagent.org/
+[admission controller webhooks]: https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/
+[gatekeeper]: https://open-policy-agent.github.io/gatekeeper/
+[gatekeeper library]: https://github.com/open-policy-agent/gatekeeper-library
+[custom resource definition]: https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/
+[constraint templates]: https://open-policy-agent.github.io/gatekeeper/website/docs/constrainttemplates/
