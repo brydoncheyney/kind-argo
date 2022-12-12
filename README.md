@@ -274,36 +274,30 @@ The [Open Policy Agent] (OPA) is _an open source, general-purpose policy engine 
 
 [Gatekeeper] uses native Kubernetes [Custom Resource Definition] (CRD)-based policies executed by OPA. Constraints are defined by reusable [Constraint Templates], which define the schema of Constraints, as well as the policy definitions.
 
-Install the Gatekeeper admissions controller
+Install the Gatekeeper admissions controller and the [Gatekeeper Library] Constraint Templates -
 
 ```
 make gatekeeper
 ```
 
-Apply the example Resources
+Install the Constaints -
 
 ```
-make gatekeeper-apply-templates gatekeeper-apply-constraints
+make gatekeeper-constraints
 ```
 
-> Constraint Templates taken from the [Gatekeeper Library]
+This creates two Constaints -
 
-This provides
-
-- a Constraint Template that defines a policy to ensure required **labels**
-- a Constraint Template that defines a policy to ensure required **annotations**
-- a Constraint to enforce all Namespaces to use an `owner` label
-- a Constraint to enforce all Namespaces to use an `registry` annotation
-
-> Note that the Constraint Templates are taken from the [Gatekeeper Library] - many more examples can be found here!
+- enforce all Namespaces to use an `owner` label
+- enforce all Namespaces to use an `registry` annotation
 
 To see the Constraints in action,
 
 ```
-make gatekeeper-apply-examples
+make gatekeeper-examples
 ```
 
-This providesd
+This provides
 
 - a Namespace definition _with_ the required label and annotations
 - a Namespace definition _without_ the required label

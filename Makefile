@@ -1,4 +1,4 @@
-all: lint cluster certmanager ingress argo hpa
+all: lint cluster certmanager ingress argo hpa gatekeeper
 
 .PHONY: up
 up: all
@@ -158,15 +158,26 @@ hpa-load-generator:
 			--restart=Never \
 			-- /bin/sh -c "while sleep 0.01; do wget -q -O- http://horizontal; done"'
 
-.PHONY: gatekeeper
-gatekeeper:
+.PHONY: gatekeeper-controller
+gatekeeper-controller:
 	$(call header, OPA Gatekeeper Controller Manager)
 	kubectl apply -f https://raw.githubusercontent.com/open-policy-agent/gatekeeper/master/deploy/gatekeeper.yaml
 	kubectl -n gatekeeper-system wait --for condition=ready pod -l control-plane=controller-manager --timeout ${K8S_TIMEOUT}
 
-.PHONY: admission-controller
-admission-controller: gatekeeper
+.PHONY: gatekeeper-constraint-templates
+gatekeeper-constraint-templates:
+	$(call header, OPA Gatekeeper ConstraintTemplates)
+	kubectl -n gatekeeper-system apply --kustomize manifests/opa
 
-gatekeeper-apply-%:
-	$(call header, OPA Gatekeeper)
-	kubectl -n gatekeeper-system apply -f manifests/opa/$*
+.PHONY: gatekeeper
+gatekeeper: gatekeeper-controller gatekeeper-constraint-templates
+
+.PHONY: gatekeeper-contraints
+gatekeeper-constraints:
+	$(call header, OPA Gatekeeper Contraints)
+	kubectl -n gatekeeper-system apply -f manifests/opa/constraints
+
+.PHONY: gatekeeper-examples
+gatekeeper-examples:
+	$(call header, OPA Gatekeeper Examples)
+	kubectl -n gatekeeper-system apply -f manifests/opa/examples
