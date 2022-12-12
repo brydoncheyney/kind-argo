@@ -45,6 +45,10 @@ certmanager:
 .PHONY: certmanager
 cert-manager: certmanager
 
+.PHONY: certificate
+certificate:
+	kubectl apply -f manifests/certificate.yaml
+
 .PHONY: ingress-nginx
 ingress-nginx:
 	$(call header, Ingress - NGINX)

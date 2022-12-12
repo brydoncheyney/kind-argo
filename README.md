@@ -34,6 +34,41 @@ Install [cert-manager] to manage [X.509] certificates in the `cert-manager` name
 make certmanager
 ```
 
+To create a a self signed certificate -
+
+```
+make certificate
+```
+
+This will create a Certificate resources that represents the [certificate request], and the Secret resource that
+
+```
+; kubectl -n default get certificate my-certificate-tls
+NAME                 READY   SECRET               AGE
+my-certificate-tls   True    my-certificate-tls   9m8s
+
+; kubectl -n default get secret my-certificate-tls
+NAME                 TYPE                DATA   AGE
+my-certificate-tls   kubernetes.io/tls   3      9m14s
+
+; kubectl -n default get secret my-certificate-tls -o jsonpath='{.data.tls\.crt}' | base64 -d | openssl x509 -noout -text
+...
+        Issuer: O=my-org
+        Validity
+            Not Before: Dec 12 11:19:19 2022 GMT
+            Not After : Mar 12 11:19:19 2023 GMT
+        Subject: O=my-org
+...
+        X509v3 extensions:
+            X509v3 Key Usage: critical
+                Digital Signature, Key Encipherment
+            X509v3 Basic Constraints: critical
+                CA:FALSE
+            X509v3 Subject Alternative Name: critical
+                DNS:my-certificate.svc
+...
+```
+
 ## Ingress
 
 Install [ingress-nginx] as an [Ingress] controller, using [NGINX] as reverse proxy and load balancer in the `ingress-nginx` namespace
@@ -318,6 +353,7 @@ Error from server (Forbidden): error when creating "manifests/opa/examples/names
 [argo]: https://argoproj.github.io/
 [cert-manager]: https://cert-manager.io/
 [x.509]: https://en.wikipedia.org/wiki/X.509
+[certificate request]: https://cert-manager.io/docs/concepts/certificate/
 [ingress]: https://kubernetes.io/docs/concepts/services-networking/ingress/
 [ingress-nginx]: https://github.com/kubernetes/ingress-nginx
 [nginx]: https://www.nginx.org/
