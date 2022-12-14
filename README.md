@@ -77,6 +77,22 @@ Install [ingress-nginx] as an [Ingress] controller, using [NGINX] as reverse pro
 make ingress-nginx
 ```
 
+Install an Ingress resource to show ingress routing between multiple services
+
+```
+make ingress-nginx-examples
+```
+
+To see the ingress in action, call the services from the host and responses should route from the expected service!
+
+```
+; curl -s localhost/foo | jq -r .os.hostname
+foo-app
+
+; curl -s localhost/bar | jq -r .os.hostname
+bar-app
+```
+
 ## Argo
 
 Argo is a project that creates and supports open source tools for Kubernetes to run workflows, manage clusters, and _do GitOps right_.

@@ -59,6 +59,16 @@ ingress-nginx:
 .PHONY: ingress
 ingress: ingress-nginx
 
+.PHONY: ingress-nginx-examples
+ingress-nginx-examples:
+	$(call header, Ingress - NGINX - examples)
+	kubectl -n ingress-nginx apply -f manifests/ingress-usage.yaml
+	kubectl -n ingress-nginx wait --for condition=ready pods -l app=foo --timeout $(K8S_TIMEOUT)
+	kubectl -n ingress-nginx wait --for condition=ready pods -l app=bar --timeout $(K8S_TIMEOUT)
+	$(call header, Validate that the ingress works - try)
+	@echo "curl localhost/foo"
+	@echo "curl localhost/bar"
+
 define cd_hostfile
 #####################################################################
 #
